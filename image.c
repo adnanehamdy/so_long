@@ -6,51 +6,77 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 10:59:15 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/13 18:14:55 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/02/20 16:47:29 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void put_rock(t_list *program, int x, int y)
+int	collectible_check(t_list *program)
 {
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, "rock.xpm", &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
+	int	i;
+	int	y;
+
+	i = 0;
+	y = 0;
+	while (program->map[i])
+	{
+		y = 0;
+		while (program->map[i][y])
+		{
+			if (program->map[i][y] == 'C')
+				return (1);
+			y++;
+		}
+		i++;
+	}
+	return (0);
 }
 
-void put_background(t_list *program, int x, int y, char *image)
+void	game_over(t_list *program)
 {
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, image, &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
+	int	width;
+	int	height;
+
+	width = 0;
+	height = 0;
+	if (program->counter == 1)
+	{
+		program->image_p = mlx_xpm_file_to_image(program->mlx_p,
+				"argl.xpm", &width, &height);
+		mlx_put_image_to_window(program->mlx_p, program->window_p,
+			program->image_p, program->y * 32, (program->x - 1) * 32);
+		program->counter++;
+	}
+	if (program->counter >= 1)
+		program->counter++;
+	if (program->counter == 5000)
+	{
+		write(2, "game over\n", 10);
+		exit(0);
+	}
 }
 
-void put_player(t_list *program, int x, int y, char *image)
+void	put_wall(t_list *program, size_t x, size_t y)
 {
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, image, &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
-	program->x = x;
-	program->y = y;
+	if (x == 0 || y == 0 || y == (ft_strlen(program->map[0]) - 1)
+		|| x == (count_map_lines(program->map) - 1))
+	{
+		program->image_p = mlx_xpm_file_to_image(program->mlx_p,
+				"wall.xpm", &program->width, &program->height);
+		mlx_put_image_to_window(program->mlx_p, program->window_p,
+			program->image_p, 32 * y, 32 * x);
+	}
+	else
+	{
+		program->image_p = mlx_xpm_file_to_image(program->mlx_p,
+				"stone.xpm", &program->width, &program->height);
+		mlx_put_image_to_window(program->mlx_p,
+			program->window_p, program->image_p, 32 * y, 32 * x);
+	}
 }
 
-void put_collect(t_list *program, int x, int y, char *image)
-{
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, image, &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
-}
-
-void put_exit(t_list *program, int x, int y, char *image)
-{
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, image, &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
-}
-
-void put_enemy(t_list *program, int x, int y, char *image)
-{
-	program->image_p = mlx_xpm_file_to_image(program->mlx_p, image, &program->width, &program->height);
-	mlx_put_image_to_window(program->mlx_p, program->window_p, program->image_p, 32 * y, 32 * x);
-}
-
-void draw_image(t_list *program, char **map)
+void	put_images_to_window(t_list *program, char **map)
 {
 	int	i;
 	int	j;
@@ -64,13 +90,13 @@ void draw_image(t_list *program, char **map)
 		{
 			put_background(program, i, j, "background.xpm");
 			if (map[i][j] == '1')
-				put_rock(program, i, j);
+				put_wall(program, i, j);
 			else if (map[i][j] == 'P')
 				put_player(program, i, j, "pup.xpm");
 			else if (map[i][j] == 'C')
-				put_collect(program, i, j, "chest.xpm");
+				put_collect(program, i, j, "collectible.xpm");
 			else if (map[i][j] == 'E')
-			 	put_exit(program, i, j, "ship.xpm");
+				put_exit(program, i, j, "door.xpm");
 			else if (map[i][j] == '7')
 				put_enemy(program, i, j, "enemy.xpm");
 			j++;
@@ -79,23 +105,31 @@ void draw_image(t_list *program, char **map)
 	}
 }
 
-void check_collectible(t_list *program)
+int	check_collectible(t_list *program)
 {
-	int	i;
-	int	y;
+	int	check;
+	int	width;
+	int	height;
 
-	i = 0;
-	y = 0;
-	while (program->map[i])
+	width = 0;
+	height = 0;
+	check = collectible_check(program);
+	if (check == 1)
+		return (1);
+	if (program->end_game && program->count == 0)
 	{
-		y = 0;
-		while (program->map[i][y])
-		{
-			if (program->map[i][y] == 'C')
-				return ;
-			y++;
-		}
-		i++;
+		program->image_p = mlx_xpm_file_to_image(program->mlx_p,
+				"yeah.xpm", &width, &height);
+		mlx_put_image_to_window(program->mlx_p, program->window_p,
+			program->image_p, program->y * 32, (program->x - 1) * 32);
+		program->count++;
 	}
-	exit(0);
+	else if (program->end_game)
+			program->count++;
+	if (program->count == 5000)
+	{
+		write(2, "you won\n", 8);
+		exit(0);
+	}
+	return (0);
 }

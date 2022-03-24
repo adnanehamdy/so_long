@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 20:51:10 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 16:48:02 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/24 11:27:53 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@ int	main(int ac, char **av)
 	put_images_to_window(program, program->map);
 	mlx_hook(program->window_p, 2, 0, detect_player_moves, program);
 	mlx_hook(program->window_p, 17, 0, exit_program, NULL);
-	mlx_loop_hook(program->mlx_p, switch_enemy_pic, program);
+	mlx_loop_hook(program->mlx_p, check_collectible, program);
 	mlx_loop(program->mlx_p);
 }

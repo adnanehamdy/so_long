@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 18:28:12 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 17:05:34 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/22 13:14:45 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ void	check_map_lines_len(char **map)
 	}
 }
 
-void	error_exit(void)
+void	error_exit(char *str, int num)
 {
-	write(2, "error\n", 6);
-	exit(1);
+	ft_putstr_fd(str, 0);
+	exit(num);
 }
 
 int	check_collec(t_list *program)

@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 14:01:37 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 17:11:51 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/24 11:39:47 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,11 @@ int	detect_player_moves(int keycode, t_list *program)
 		right_move(program);
 	else if (keycode == 53)
 		exit(0);
-	put_wall(program, 0, 0);
-	mlx_string_put(program->mlx_p, program->window_p, 0 * 32, 0 * 32,
-		0, ft_itoa(count));
-	count++;
+	if (keycode == 13 || keycode == 0 || keycode == 1 || keycode == 2)
+	{
+		count++;
+		ft_putstr_fd(ft_itoa(count), 0);
+		ft_putstr_fd("\n", 0);
+	}
 	return (0);
 }

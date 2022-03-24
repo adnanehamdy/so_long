@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 20:51:19 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 16:50:27 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/22 13:14:22 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	**read_file(int fd)
 		map_string = ft_strjoin(map_string, buffer);
 		free(tmp);
 		if (!map_string)
-			error_exit();
+			error_exit("error\n", 1);
 	}
 	free(buffer);
 	check_dup_newline(map_string);
@@ -49,7 +49,7 @@ char	open_file(char *filename)
 	{
 		fd = open(filename, O_RDONLY);
 		if (fd == -1)
-			error_exit();
+			error_exit("can't create file descriptor\n", 1);
 	}
 	else
 	{

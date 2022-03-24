@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 10:59:15 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 16:47:29 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/22 12:59 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,30 +33,6 @@ int	collectible_check(t_list *program)
 	return (0);
 }
 
-void	game_over(t_list *program)
-{
-	int	width;
-	int	height;
-
-	width = 0;
-	height = 0;
-	if (program->counter == 1)
-	{
-		program->image_p = mlx_xpm_file_to_image(program->mlx_p,
-				"argl.xpm", &width, &height);
-		mlx_put_image_to_window(program->mlx_p, program->window_p,
-			program->image_p, program->y * 32, (program->x - 1) * 32);
-		program->counter++;
-	}
-	if (program->counter >= 1)
-		program->counter++;
-	if (program->counter == 5000)
-	{
-		write(2, "game over\n", 10);
-		exit(0);
-	}
-}
-
 void	put_wall(t_list *program, size_t x, size_t y)
 {
 	if (x == 0 || y == 0 || y == (ft_strlen(program->map[0]) - 1)
@@ -66,6 +42,7 @@ void	put_wall(t_list *program, size_t x, size_t y)
 				"wall.xpm", &program->width, &program->height);
 		mlx_put_image_to_window(program->mlx_p, program->window_p,
 			program->image_p, 32 * y, 32 * x);
+		mlx_destroy_image(program->mlx_p, program->image_p);
 	}
 	else
 	{
@@ -73,6 +50,7 @@ void	put_wall(t_list *program, size_t x, size_t y)
 				"stone.xpm", &program->width, &program->height);
 		mlx_put_image_to_window(program->mlx_p,
 			program->window_p, program->image_p, 32 * y, 32 * x);
+		mlx_destroy_image(program->mlx_p, program->image_p);
 	}
 }
 
@@ -97,8 +75,6 @@ void	put_images_to_window(t_list *program, char **map)
 				put_collect(program, i, j, "collectible.xpm");
 			else if (map[i][j] == 'E')
 				put_exit(program, i, j, "door.xpm");
-			else if (map[i][j] == '7')
-				put_enemy(program, i, j, "enemy.xpm");
 			j++;
 		}
 		i++;
@@ -122,14 +98,12 @@ int	check_collectible(t_list *program)
 				"yeah.xpm", &width, &height);
 		mlx_put_image_to_window(program->mlx_p, program->window_p,
 			program->image_p, program->y * 32, (program->x - 1) * 32);
+		mlx_destroy_image(program->mlx_p, program->image_p);
 		program->count++;
 	}
 	else if (program->end_game)
 			program->count++;
 	if (program->count == 5000)
-	{
-		write(2, "you won\n", 8);
-		exit(0);
-	}
+		error_exit("you won\n", 0);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/17 12:24:20 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 17:11:14 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/24 11:19:40 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	check_invalid_conponents(char **map)
 		while (map[i][j])
 		{
 			if (map[i][j] != '0' && map[i][j] != '1' && map[i][j] != 'E' &&
-			map[i][j] != 'C' && map[i][j] != '7' && map[i][j] != 'P')
+			map[i][j] != 'C' && map[i][j] != 'P')
 			{
 				write(2, "error invalid map\n", 18);
 				exit(1);

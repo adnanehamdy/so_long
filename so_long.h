@@ -6,7 +6,7 @@
 /*   By: ahamdy <ahamdy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 20:52:08 by ahamdy            #+#    #+#             */
-/*   Updated: 2022/02/20 17:01:07 by ahamdy           ###   ########.fr       */
+/*   Updated: 2022/03/22 13:13:12 by ahamdy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_list
 char	**convert_file_to_string(char *c);
 size_t	count_map_lines(char **c);
 void	check_len(char **map);
-void	error_exit(void);
+void	error_exit(char *str, int num);
 void	check_dup_newline(char *map_string);
 void	put_images_to_window(t_list *program, char **map);
 int		check_collec(t_list *program);
